@@ -15,7 +15,7 @@ $( function() {
   $.noConflict();
   $( "#maestro" ).autocomplete({
     source: "/maestros/search",
-    minLength: 2,
+    minLength: 1,
     select: function( event, ui ) {
 
       $('#maestros_id').val( ui.item.id );
@@ -44,7 +44,7 @@ $( function() {
       <div class="card">
         <div class="card-header">
           <h1>
-            <a href="/huertas/{{$huerta->id}}/arbols">
+            <a href="/huertas/{{$huerta->id}}/genotipos">
               <i class="fas fa-caret-square-left"></i>
             </a>
             {{ $title }}
@@ -59,16 +59,17 @@ $( function() {
 
               <div class="col-12">
 
-                {{ Form::open(array('route' => 'arbols.store',  'autocomplete' => 'off')) }}
+                {{ Form::open(array('route' => 'genotipos.store',  'autocomplete' => 'off')) }}
                 {{ Form::hidden('huertas_id', $huerta->id, array('id' => 'huertas_id', 'name' => 'huertas_id')) }}
                 <div class="form-group">
                   <label for="">Maestro</label>
                   <input type="text" class="form-control" name="maestro" id="maestro" placeholder="Ingrese maestro">
+                  {{ Form::hidden('maestros_id', '', array('id' => 'maestros_id', 'name' => 'maestros_id')) }}
                 </div>
 
                 <div class="form-group">
-                  <label for="">Arbol</label>
-                  <input type="text" class="form-control" name="arbol" id="arbol" placeholder="Ingrese el nombre Arbol">
+                  <label for="">Genotipo</label>
+                  <input type="text" class="form-control" name="genotipo" id="genotipo" placeholder="Ingrese el nombre genotipo">
                 </div>
 
 
@@ -91,7 +92,7 @@ $( function() {
 
                 <div class="form-group">
                   <label for="activo">Activo</label>
-                  <input type="checkbox" data-toggle="toggle" name="activo" id="activo">
+                  <input type="checkbox" data-toggle="toggle" name="activo" id="activo" checked>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Guardar</button>

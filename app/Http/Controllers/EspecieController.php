@@ -121,19 +121,8 @@ class EspecieController extends Controller
     $activo = 0;
     if ($request->activo=='on') { $activo = 1; }
 
-    $date = $request->date;
-
-    $dia = substr($date,0,2);
-    $mes = substr($date,3,2);
-    $anio = substr($date,6,4);
-
-    $date = Carbon::createFromDate($anio, $mes, $dia)->setTime(0, 0, 0);
-
     $especie = Especie::find($id);
     $especie->especie = $request->especie;
-    $especie->lineas = $request->lineas;
-    $especie->posiciones =  $request->posiciones;
-    $especie->fechacreacion =  $date;
     $especie->activo = $activo;
     $especie->save();
     return redirect('/especies');

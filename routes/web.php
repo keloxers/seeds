@@ -41,19 +41,25 @@ Route::post('/permissions', [ 'as' => 'permissions.store', 'uses' => 'Permission
 Route::post('/huertas/finder', [ 'as' => 'huertas.finder', 'uses' => 'HuertaController@finder']);
 Route::get('/huertas/{id}/destroy', 'HuertaController@destroy')->name('huertas');
 Route::get( '/huertas/search', array('as' => 'huertas.search', 'uses' => 'HuertaController@search'));
-Route::get('/huertas/{id}/arbols', 'ArbolController@index')->name('arbols');
+Route::get('/huertas/{id}/genotipos', 'genotipoController@index')->name('genotipos');
 Route::resource('huertas', 'HuertaController');
 
-Route::post('/arbols/finder', [ 'as' => 'arbols.finder', 'uses' => 'ArbolController@finder']);
-Route::get('/arbols/{id}/destroy', 'ArbolController@destroy')->name('arbols');
-Route::get( '/arbols/search', array('as' => 'arbols.search', 'uses' => 'ArbolController@search'));
+Route::post('/genotipos/finder', [ 'as' => 'genotipos.finder', 'uses' => 'GenotipoController@finder']);
+Route::get('/genotipos/{id}/destroy', 'GenotipoController@destroy')->name('genotipos');
+Route::get( '/genotipos/search', array('as' => 'genotipos.search', 'uses' => 'GenotipoController@search'));
 
-Route::get('/arbols/{id}/create', 'ArbolController@create')->name('arbols');
-Route::resource('arbols', 'ArbolController');
-
-Route::get( '/maestros/search', array('as' => 'maestros.search', 'uses' => 'MaestroController@search'));
+Route::get('/genotipos/{id}/create', 'genotipoController@create')->name('genotipos');
+Route::resource('genotipos', 'genotipoController');
 
 Route::post('/especies/finder', [ 'as' => 'especies.finder', 'uses' => 'EspecieController@finder']);
 Route::get('/especies/{id}/destroy', 'EspecieController@destroy')->name('especies');
 Route::get( '/especies/search', array('as' => 'especies.search', 'uses' => 'EspecieController@search'));
+Route::get('/especies/{id}/maestros', 'MaestroController@index')->name('maestros');
 Route::resource('especies', 'EspecieController');
+
+Route::post('/maestros/finder', [ 'as' => 'maestros.finder', 'uses' => 'MaestroController@finder']);
+Route::get('/maestros/{id}/destroy', 'MaestroController@destroy')->name('maestros');
+Route::get( '/maestros/search', array('as' => 'maestros.search', 'uses' => 'MaestroController@search'));
+Route::get( '/maestros/{id}/create', array('as' => 'maestros.create', 'uses' => 'MaestroController@create'));
+
+Route::resource('maestros', 'MaestroController');

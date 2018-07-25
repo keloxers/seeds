@@ -8,10 +8,12 @@ use Validator;
 use Bouncer;
 use App\Categoria;
 use App\Huerta;
-use App\Arbol;
+use App\Genotipo;
+
+use Carbon\Carbon;
 
 
-class ArbolController extends Controller
+class GenotipoController extends Controller
 {
 
   public function index($id)
@@ -23,9 +25,9 @@ class ArbolController extends Controller
     }
 
     $huerta = Huerta::find($id);
-    $arbols = Arbol::where('huertas_id',$id)->paginate(25);
+    $genotipos = Genotipo::where('huertas_id',$id)->paginate(25);
     $title = "Huerta: " . $huerta->huerta;
-    return view('arbols.index', ['huerta' => $huerta, 'arbols' => $arbols, 'title' => $title ]);
+    return view('genotipos.index', ['huerta' => $huerta, 'genotipos' => $genotipos, 'title' => $title ]);
 
   }
 
@@ -40,8 +42,8 @@ class ArbolController extends Controller
 
       $huerta = Huerta::find($id);
 
-      $title = "Crear arbols para huerta:";
-      return view('arbols.create', ['huerta' => $huerta, 'title' => $title]);
+      $title = "Crear genotipo en huerta:";
+      return view('genotipos.create', ['huerta' => $huerta, 'title' => $title]);
     }
 
 
@@ -55,6 +57,7 @@ class ArbolController extends Controller
 
       $validator = Validator::make($request->all(), [
         'huertas_id' => 'required|exists:huertas,id',
+        'maestros_id' => 'required|exists:maestros,id',
       ]);
 
 
@@ -68,17 +71,30 @@ class ArbolController extends Controller
         die;
       }
 
-      $correcta = 0;
-      if ($request->correcta=='on') { $correcta = 1; }
+      $activo = 0;
+      if ($request->activo=='on') { $activo = 1; }
 
-      $arbol = new Arbol;
-      $arbol->huertas_id = $request->huertas_id;
-      $arbol->arbol = $request->arbol;
-      $arbol->correcta = $correcta;
-      $arbol->activo = true;
-      $arbol->save();
-      // return redirect('huertas/' . $request->huertas_id . '/arbols');
-      return redirect('arbols/' . $request->huertas_id . '/create');
+      $date = $request->date;
+
+      $dia = substr($date,0,2);
+      $mes = substr($date,3,2);
+      $anio = substr($date,6,4);
+
+      $date = Carbon::createFromDate($anio, $mes, $dia)->setTime(0, 0, 0);
+
+
+
+      $genotipo = new Genotipo;
+      $genotipo->huertas_id = $request->huertas_id;
+      $genotipo->maestros_id = $request->maestros_id;
+      $genotipo->genotipo = $request->genotipo;
+      $genotipo->linea = $request->linea;
+      $genotipo->posicion = $request->posicion;
+      $genotipo->fechaplantacion = $date;
+      $genotipo->activo = $activo;
+
+      $genotipo->save();
+      return redirect('genotipos/' . $request->huertas_id . '/create');
 
 
 
@@ -97,9 +113,9 @@ class ArbolController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $arbol = Arbol::find($id);
-    $title = "huerta Editar";
-    return view('huertas.edit', ['arbol' => $arbol, 'title' => $title ]);
+    $genotipo = Genotipo::find($id);
+    $title = "genotipo Editar";
+    return view('genotipos.edit', ['genotipo' => $genotipo, 'title' => $title ]);
   }
 
 
@@ -112,7 +128,7 @@ class ArbolController extends Controller
     }
 
     $validator = Validator::make($request->all(), [
-      'categoria' => 'required|unique:categorias,categoria,'.$id . '|max:125',
+      'genotipo' => 'required|unique:genotipos,id,'.$id . '|max:125',
 
     ]);
 
@@ -127,13 +143,33 @@ class ArbolController extends Controller
       die;
     }
 
-    $activo = 0;
-    if ($request->activo=='on') { $activo = 1; }
 
-    $categoria = Arbol::find($id);
-    $categoria->categoria = $request->categoria;
-    $categoria->activo = $activo;
-    $categoria->save();
+          $activo = 0;
+          if ($request->activo=='on') { $activo = 1; }
+
+          $date = $request->date;
+
+          $dia = substr($date,0,2);
+          $mes = substr($date,3,2);
+          $anio = substr($date,6,4);
+
+          $date = Carbon::createFromDate($anio, $mes, $dia)->setTime(0, 0, 0);
+
+          $genotipo = Genotipo::find($id);
+          $huertas_id = $genotipo->huertas_id;
+          $genotipo->maestros_id = $request->maestros_id;
+          $genotipo->genotipo = $request->genotipo;
+          $genotipo->linea = $request->linea;
+          $genotipo->posicion = $request->posicion;
+          $genotipo->fechaplantacion = $date;
+          $genotipo->activo = $activo;
+
+          $genotipo->save();
+
+          return redirect('/huertas/' . $huertas_id . '/genotipos');
+
+
+
     return redirect('/categorias');
 
   }
@@ -167,7 +203,7 @@ class ArbolController extends Controller
       die;
     }
 
-    $categoria = Arbol::find($id);
+    $categoria = Genotipo::find($id);
     $categoria->delete();
     return redirect('/categorias/');
 
@@ -179,7 +215,7 @@ class ArbolController extends Controller
 
     public function finder(Request $request){
 
-      $categorias = Arbol::where('categoria', 'like', '%'. $request->buscar . '%')->paginate(25);
+      $categorias = Genotipo::where('categoria', 'like', '%'. $request->buscar . '%')->paginate(25);
 
 
       $title = "categorias buscando: " . $request->buscar;
@@ -195,7 +231,7 @@ class ArbolController extends Controller
     //  echo $term;
     //  die;
 
-    $datos = Arbol::where('categoria', 'like', '%'. $term . '%')->get();
+    $datos = Genotipo::where('categoria', 'like', '%'. $term . '%')->get();
     $adevol = array();
     if (count($datos) > 0) {
       foreach ($datos as $dato)
@@ -238,8 +274,8 @@ class ArbolController extends Controller
       die;
     }
 
-    $categoria = Arbol::find($id);
-    $title='categoria ver';
+    $categoria = Genotipo::find($id);
+    $title='Genotipo ver';
     return view('categorias.show', ['categoria' => $categoria, 'title' => $title]);
 
   }

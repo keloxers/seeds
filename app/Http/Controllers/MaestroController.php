@@ -6,13 +6,15 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Http\Request;
 use Validator;
 use Bouncer;
-use App\maestro;
-use Carbon\Carbon;
+use App\Categoria;
+use App\Especie;
+use App\Maestro;
 
-class maestroController extends Controller
+
+class MaestroController extends Controller
 {
 
-  public function index()
+  public function index($id)
   {
 
     if (Bouncer::cannot('Configuracion')) {
@@ -20,23 +22,26 @@ class maestroController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $maestros = maestro::paginate(25);
-    $title = "maestros";
-    return view('maestros.index', ['maestros' => $maestros, 'title' => $title ]);
+    $especie = Especie::find($id);
+    $maestros = Maestro::where('especies_id',$id)->paginate(25);
+    $title = "especie: " . $especie->especie;
+    return view('maestros.index', ['especie' => $especie, 'maestros' => $maestros, 'title' => $title ]);
 
   }
 
 
 
-    public function create()
+    public function create($id)
     {
       if (Bouncer::cannot('Configuracion')) {
         $errors[] = 'No tiene autorizacion para ingresar a este modulo.';
         return redirect()->back()->with('errors', $errors)->withInput();
       }
 
-      $title = "Crear maestro";
-      return view('maestros.create', ['title' => $title]);
+      $especie = Especie::find($id);
+
+      $title = "Crear maestros para especie:";
+      return view('maestros.create', ['especie' => $especie, 'title' => $title]);
     }
 
 
@@ -49,7 +54,7 @@ class maestroController extends Controller
       }
 
       $validator = Validator::make($request->all(), [
-        'maestro' => 'required|max:125',
+        'especies_id' => 'required|exists:especies,id',
       ]);
 
 
@@ -63,27 +68,16 @@ class maestroController extends Controller
         die;
       }
 
-      $date = $request->date;
-
-      $dia = substr($date,0,2);
-      $mes = substr($date,3,2);
-      $anio = substr($date,6,4);
-
-      $date = Carbon::createFromDate($anio, $mes, $dia)->setTime(0, 0, 0);
-
-
-
       $activo = 0;
       if ($request->activo=='on') { $activo = 1; }
 
-      $maestro = new maestro;
+      $maestro = new Maestro;
+      $maestro->especies_id = $request->especies_id;
       $maestro->maestro = $request->maestro;
-      $maestro->lineas = $request->lineas;
-      $maestro->posiciones =  $request->posiciones;
-      $maestro->fechacreacion =  $date;
       $maestro->activo = $activo;
       $maestro->save();
-      return redirect('/maestros');
+      return redirect('maestros/' . $request->especies_id . '/create');
+
 
 
 
@@ -101,8 +95,8 @@ class maestroController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $maestro = maestro::find($id);
-    $title = "maestro Editar";
+    $maestro = Maestro::find($id);
+    $title = "Maestro Editar";
     return view('maestros.edit', ['maestro' => $maestro, 'title' => $title ]);
   }
 
@@ -110,14 +104,16 @@ class maestroController extends Controller
 
   public function update(Request $request, $id)
   {
+
     if (Bouncer::cannot('Configuracion')) {
       $errors[] = 'No tiene autorizacion para ingresar a este modulo.';
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $validator = Validator::make($request->all(), [
-      'maestro' => 'required|max:125',
 
+
+    $validator = Validator::make($request->all(), [
+      'maestros_id' => 'required|unique:maestros,id,'.$id . '|max:125',
     ]);
 
 
@@ -134,22 +130,12 @@ class maestroController extends Controller
     $activo = 0;
     if ($request->activo=='on') { $activo = 1; }
 
-    $date = $request->date;
-
-    $dia = substr($date,0,2);
-    $mes = substr($date,3,2);
-    $anio = substr($date,6,4);
-
-    $date = Carbon::createFromDate($anio, $mes, $dia)->setTime(0, 0, 0);
-
-    $maestro = maestro::find($id);
+    $maestro = Maestro::find($id);
+    $especies_id = $maestro->especies_id;
     $maestro->maestro = $request->maestro;
-    $maestro->lineas = $request->lineas;
-    $maestro->posiciones =  $request->posiciones;
-    $maestro->fechacreacion =  $date;
     $maestro->activo = $activo;
     $maestro->save();
-    return redirect('/maestros');
+    return redirect('/especies/' . $especies_id . '/maestros');
 
   }
 
@@ -182,9 +168,10 @@ class maestroController extends Controller
       die;
     }
 
-    $maestro = maestro::find($id);
+    $maestro = Maestro::find($id);
+    $especies_id = $maestro->$especies_id;
     $maestro->delete();
-    return redirect('/maestros/');
+    return redirect('especies/' . $especies_id . '/maestros');
 
 
   }
@@ -193,11 +180,8 @@ class maestroController extends Controller
 
 
     public function finder(Request $request){
-
-      $maestros = maestro::where('maestro', 'like', '%'. $request->buscar . '%')->paginate(25);
-
-
-      $title = "maestro buscando: " . $request->buscar;
+      $maestros = Maestro::where('maestro', 'like', '%'. $request->buscar . '%')->paginate(35);
+      $title = "Maestro buscando: " . $request->buscar;
       return view('maestros.index', ['maestros' => $maestros, 'title' => $title ]);
 
     }
@@ -210,7 +194,7 @@ class maestroController extends Controller
     //  echo $term;
     //  die;
 
-    $datos = maestro::where('maestro', 'like', '%'. $term . '%')->get();
+    $datos = Maestro::where('maestro', 'like', '%'. $term . '%')->get();
     $adevol = array();
     if (count($datos) > 0) {
       foreach ($datos as $dato)
@@ -253,8 +237,8 @@ class maestroController extends Controller
       die;
     }
 
-    $maestro = maestro::find($id);
-    $title='maestro';
+    $maestro = Maestro::find($id);
+    $title='maestro ver';
     return view('maestros.show', ['maestro' => $maestro, 'title' => $title]);
 
   }

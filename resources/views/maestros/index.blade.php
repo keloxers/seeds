@@ -11,39 +11,39 @@
 
   <div class="row">
     <div class="col-6">
-      {{ Form::open(array('route' => 'arbols.finder', 'class' => 'form-inline', 'role' => 'form')) }}
+      {{ Form::open(array('route' => 'maestros.finder', 'class' => 'form-inline', 'role' => 'form')) }}
       <div class="form-group mb-2">
         <input type="text" class="form-control" name="buscar" id="buscar" value="">
-        {{ Form::hidden('arbol_id', '', array('id' => 'arbol_id', 'name' => 'arbol_id')) }}
+        {{ Form::hidden('maestro_id', '', array('id' => 'maestro_id', 'name' => 'maestro_id')) }}
       </div>
       <button type="submit" class="btn btn-primary mb-2">Buscar</button>
       </form>
     </div>
     <div class="col-6 text-right">
-      <a href="/arbols/{{$huerta->id}}/create">
+      <a href="/maestros/{{$especie->id}}/create">
         <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo</button>
       </a>
     </div>
   </div>
 
-  @if($arbols)
+  @if($maestros)
 
   <table class="table">
     <thead class="thead-light">
       <tr>
-        <th scope="col">Arbol</th>
+        <th scope="col">Maestro</th>
         <th scope="col">Activo</th>
         <th scope="col">Opciones</th>
       </tr>
     </thead>
     <tbody>
-      @foreach ($arbols as $arbol)
+      @foreach ($maestros as $maestro)
       <tr>
         <td>
-          {{ $arbol->arbol}}
+          {{ $maestro->maestro}}
         </td>
         <td>
-          @if ($arbol->activo)
+          @if ($maestro->activo)
             <span class="badge badge-success">Si</span>
           @else
             <span class="badge badge-danger">No</span>
@@ -51,8 +51,8 @@
         </td>
         <td>
           <h5>
-          <a href="/arbols/{{ $arbol->id }}/edit"><i class="fas fa-edit"></i></a>
-          <a href="/arbols/{{ $arbol->id }}/arbol"><i class="fas fa-eye"></i></a>
+          <a href="/maestros/{{ $maestro->id }}/edit"><i class="fas fa-edit"></i></a>
+          <a href="/maestros/{{ $maestro->id }}"><i class="fas fa-eye"></i></a>
         </h5>
 
         </td>
@@ -61,7 +61,7 @@
     </tbody>
   </table>
 
-  {{ $arbols->links() }}
+  {{ $maestros->links() }}
 
   @endif
 

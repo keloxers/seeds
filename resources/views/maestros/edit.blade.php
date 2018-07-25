@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-8">
@@ -15,25 +16,23 @@
 
               <div class="col-12">
 
-                {{ Form::open(array('url' => '/especies/' . $especie->id, 'class' => 'form-group', 'role' => 'form')) }}
-                {{ Form::hidden('_method', 'DELETE') }}
+                {{ Form::open(array('url' => URL::to('maestros/' . $maestro->id), 'method' => 'PUT', 'role' => 'form')) }}
+                {{ Form::hidden('maestros_id', $maestro->id, array('id' => 'maestros_id', 'name' => 'maestros_id')) }}
 
                 <div class="form-group">
-                  <label for="">Especie</label>
-                  {{ $especie->especie}}
+                  <label for="">maestro</label>
+                  {{ Form::text('maestro', $maestro->maestro, array('id' => 'maestro', 'name' => 'maestro', 'class' => "form-control" , 'placeholder' => 'Ingrese un maestro')) }}
                 </div>
                 <div class="form-group">
                   <label for="activo">Activo</label>
-
-                  @if ($especie->activo)
-                    <span class="badge badge-success">Activo</span>
-                  @else
-                    <span class="badge badge-danger">Inactivo</span>
+                  <input type="checkbox" data-toggle="toggle" name="activo" id="activo"
+                  @if ($maestro->activo)
+                    checked
                   @endif
-
+                  >
 
                 </div>
-                <button type="submit" class="btn btn-danger">Borrar</button>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
                 {{ Form::close() }}
               </div>
 
