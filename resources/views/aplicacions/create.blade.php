@@ -16,19 +16,14 @@
 
               <div class="col-12">
 
-                {{ Form::open(array('url' => URL::to('categorias/' . $categoria->id), 'method' => 'PUT', 'role' => 'form')) }}
+                {{ Form::open(array('route' => 'aplicacions.store',  'autocomplete' => 'off')) }}
                 <div class="form-group">
-                  <label for="">categoria</label>
-                  {{ Form::text('categoria', $categoria->categoria, array('id' => 'categoria', 'name' => 'categoria', 'class' => "form-control" , 'placeholder' => 'Ingrese un categoria')) }}
+                  <label for="">aplicacion</label>
+                  <input type="aplicacion" class="form-control" name="aplicacion" id="aplicacion" placeholder="Ingrese el nombre del aplicacion">
                 </div>
                 <div class="form-group">
                   <label for="activo">Activo</label>
-                  <input type="checkbox" data-toggle="toggle" name="activo" id="activo"
-                  @if ($categoria->activo)
-                    checked
-                  @endif
-                  >
-
+                  <input type="checkbox" data-toggle="toggle" name="activo" id="activo" checked>
                 </div>
                 <button type="submit" class="btn btn-primary">Guardar</button>
                 {{ Form::close() }}

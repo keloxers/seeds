@@ -16,16 +16,25 @@
 
               <div class="col-12">
 
-                {{ Form::open(array('route' => 'categorias.store',  'autocomplete' => 'off')) }}
+                {{ Form::open(array('url' => '/aplicacions/' . $aplicacion->id, 'class' => 'form-group', 'role' => 'form')) }}
+                {{ Form::hidden('_method', 'DELETE') }}
+
                 <div class="form-group">
-                  <label for="">categoria</label>
-                  <input type="categoria" class="form-control" name="categoria" id="categoria" placeholder="Ingrese el nombre del categoria">
+                  <label for="">aplicacion</label>
+                  {{ $aplicacion->aplicacion}}
                 </div>
                 <div class="form-group">
-                  <label for="activo">Activo</label>
-                  <input type="checkbox" data-toggle="toggle" name="activo" id="activo" checked>
+                  <label for="activo">Estado</label>
+
+                  @if ($aplicacion->activo)
+                    <span class="badge badge-success">Activo</span>
+                  @else
+                    <span class="badge badge-danger">Inactivo</span>
+                  @endif
+
+
                 </div>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-danger">Borrar</button>
                 {{ Form::close() }}
               </div>
 

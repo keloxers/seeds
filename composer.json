@@ -11,6 +11,7 @@
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4.0",
+        "laraveles/spanish": "^1.0",
         "nesbot/carbon": "~1.21",
         "silber/bouncer": "v1.0.0-rc.1"
     },

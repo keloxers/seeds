@@ -41,13 +41,13 @@ Route::post('/permissions', [ 'as' => 'permissions.store', 'uses' => 'Permission
 Route::post('/huertas/finder', [ 'as' => 'huertas.finder', 'uses' => 'HuertaController@finder']);
 Route::get('/huertas/{id}/destroy', 'HuertaController@destroy')->name('huertas');
 Route::get( '/huertas/search', array('as' => 'huertas.search', 'uses' => 'HuertaController@search'));
-Route::get('/huertas/{id}/genotipos', 'genotipoController@index')->name('genotipos');
+Route::get('/huertas/{id}/genotipos', 'GenotipoController@index')->name('genotipos');
+Route::get('/huertas/{id}/manejos', 'ManejoController@index')->name('manejos');
 Route::resource('huertas', 'HuertaController');
 
 Route::post('/genotipos/finder', [ 'as' => 'genotipos.finder', 'uses' => 'GenotipoController@finder']);
 Route::get('/genotipos/{id}/destroy', 'GenotipoController@destroy')->name('genotipos');
 Route::get( '/genotipos/search', array('as' => 'genotipos.search', 'uses' => 'GenotipoController@search'));
-
 Route::get('/genotipos/{id}/create', 'genotipoController@create')->name('genotipos');
 Route::resource('genotipos', 'genotipoController');
 
@@ -63,3 +63,19 @@ Route::get( '/maestros/search', array('as' => 'maestros.search', 'uses' => 'Maes
 Route::get( '/maestros/{id}/create', array('as' => 'maestros.create', 'uses' => 'MaestroController@create'));
 
 Route::resource('maestros', 'MaestroController');
+
+Route::post('/aplicacions/finder', [ 'as' => 'aplicacions.finder', 'uses' => 'AplicacionController@finder']);
+Route::get('/aplicacions/{id}/destroy', 'AplicacionController@destroy')->name('aplicacions');
+Route::get( '/aplicacions/search', array('as' => 'aplicacions.search', 'uses' => 'AplicacionController@search'));
+Route::resource('aplicacions', 'AplicacionController');
+
+Route::post('/manejos/finder', [ 'as' => 'manejos.finder', 'uses' => 'ManejoController@finder']);
+Route::get( '/manejos/{id}/create', array('as' => 'manejos.create', 'uses' => 'ManejoController@create'));
+Route::get( '/manejos/{id}/areas', array('as' => 'areas.index', 'uses' => 'AreaController@index'));
+Route::resource('manejos', 'ManejoController');
+
+Route::post('/areas/finder', [ 'as' => 'areas.finder', 'uses' => 'AreaController@finder']);
+Route::get('/areas/{id}/destroy', 'AreaController@destroy')->name('areas');
+Route::get( '/areas/search', array('as' => 'areas.search', 'uses' => 'AreaController@search'));
+Route::get( '/areas/{id}/create', array('as' => 'areas.create', 'uses' => 'AreaController@create'));
+Route::resource('areas', 'AreaController');

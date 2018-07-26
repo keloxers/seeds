@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Categoria extends Model
+class Aplicacion extends Model
 {
 
-  protected $table = 'categorias';
+  protected $table = 'aplicacions';
 
 
 

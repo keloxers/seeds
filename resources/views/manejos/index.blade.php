@@ -11,45 +11,39 @@
 
   <div class="row">
     <div class="col-6">
-      {{ Form::open(array('route' => 'genotipos.finder', 'class' => 'form-inline', 'role' => 'form')) }}
+      {{ Form::open(array('route' => 'manejos.finder', 'class' => 'form-inline', 'role' => 'form')) }}
       <div class="form-group mb-2">
         <input type="text" class="form-control" name="buscar" id="buscar" value="">
-        {{ Form::hidden('genotipo_id', '', array('id' => 'genotipo_id', 'name' => 'genotipo_id')) }}
+        {{ Form::hidden('manejo_id', '', array('id' => 'manejo_id', 'name' => 'manejo_id')) }}
       </div>
       <button type="submit" class="btn btn-primary mb-2">Buscar</button>
       </form>
     </div>
     <div class="col-6 text-right">
-      <a href="/genotipos/{{$huerta->id}}/create">
+      <a href="/manejos/{{$huerta->id}}/create">
         <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo</button>
       </a>
     </div>
   </div>
 
-  @if($genotipos)
+  @if($manejos)
 
   <table class="table">
     <thead class="thead-light">
       <tr>
-        <th scope="col">Genotipo</th>
-        <th scope="col">Maestro</th>
-        <th scope="col">Linea</th>
-        <th scope="col">Posicion</th>
-        <th scope="col">Fecha Plantacion</th>
-        <th scope="col">Activo</th>
+        <th scope="col">Fecha</th>
+        <th scope="col">Aplicacion</th>
+        <th scope="col">Estado</th>
         <th scope="col">Opciones</th>
       </tr>
     </thead>
     <tbody>
-      @foreach ($genotipos as $genotipo)
+      @foreach ($manejos as $manejo)
       <tr>
-        <td>{{ $genotipo->genotipo}}</td>
-        <td>{{ $genotipo->maestros->maestro}}</td>
-        <td>{{ $genotipo->linea}}</td>
-        <td>{{ $genotipo->posicion}}</td>
-        <td>{{ $genotipo->fechaplantacion}}</td>
+        <td>{{ $manejo->fecha}}</td>
+        <td>{{ $manejo->aplicacions->aplicacion}}</td>
         <td>
-          @if ($genotipo->activo)
+          @if ($manejo->activo)
             <span class="badge badge-success">Si</span>
           @else
             <span class="badge badge-danger">No</span>
@@ -57,8 +51,8 @@
         </td>
         <td>
           <h5>
-          <a href="/genotipos/{{ $genotipo->id }}/edit"><i class="fas fa-edit"></i></a>
-          <a href="/genotipos/{{ $genotipo->id }}"><i class="fas fa-eye"></i></a>
+          <a href="/manejos/{{ $manejo->id }}/edit"><i class="fas fa-edit"></i></a>
+          <a href="/manejos/{{ $manejo->id }}/areas"><i class="fas fa-vector-square"></i></a>
         </h5>
 
         </td>
@@ -67,7 +61,7 @@
     </tbody>
   </table>
 
-  {{ $genotipos->links() }}
+  {{ $manejos->links() }}
 
   @endif
 

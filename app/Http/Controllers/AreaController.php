@@ -6,12 +6,15 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Http\Request;
 use Validator;
 use Bouncer;
-use App\Categoria;
+use App\Manejo;
+use App\Area;
 
-class CategoriaController extends Controller
+use Carbon\Carbon;
+
+class AreaController extends Controller
 {
 
-  public function index()
+  public function index($id)
   {
 
     if (Bouncer::cannot('Configuracion')) {
@@ -19,24 +22,33 @@ class CategoriaController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
+    $manejo = Manejo::find($id);
+    $areas = Area::where('manejos_id',$id)->paginate(25);
 
-    $categorias = Categoria::paginate(25);
-    $title = "Categorias";
-    return view('categorias.index', ['categorias' => $categorias, 'title' => $title ]);
+
+    $fecha = new Carbon($manejo->fecha);
+
+
+
+
+    $title = "manejo: " . $fecha->format('d/m/Y') . ', ' . $manejo->aplicacions->aplicacion;
+    return view('areas.index', ['manejo' => $manejo, 'areas' => $areas, 'title' => $title ]);
 
   }
 
 
 
-    public function create()
+    public function create($id)
     {
       if (Bouncer::cannot('Configuracion')) {
         $errors[] = 'No tiene autorizacion para ingresar a este modulo.';
         return redirect()->back()->with('errors', $errors)->withInput();
       }
 
-      $title = "Crear Categoria";
-      return view('categorias.create', ['title' => $title]);
+      $manejo = Manejo::find($id);
+
+      $title = "Crear area en manejo:";
+      return view('areas.create', ['manejo' => $manejo, 'title' => $title]);
     }
 
 
@@ -49,7 +61,7 @@ class CategoriaController extends Controller
       }
 
       $validator = Validator::make($request->all(), [
-        'categoria' => 'required|unique:categorias,categoria|max:125',
+        'manejos_id' => 'required|exists:manejos,id',
       ]);
 
 
@@ -63,16 +75,17 @@ class CategoriaController extends Controller
         die;
       }
 
-      $activo = 0;
-      if ($request->activo=='on') { $activo = 1; }
 
-      $categoria = new Categoria;
-      $categoria->categoria = $request->categoria;
-      $categoria->activo = $activo;
-      $categoria->save();
-      return redirect('/categorias');
+      $area = new Area;
+      $area->manejos_id = $request->manejos_id;
 
+      $area->desdelinea = $request->desdelinea;
+      $area->hastalinea = $request->hastalinea;
+      $area->desdeposicion = $request->desdeposicion;
+      $area->hastaposicion = $request->hastaposicion;
 
+      $area->save();
+      return redirect('manejos/' . $request->manejos_id . '/areas');
 
     }
 
@@ -88,9 +101,9 @@ class CategoriaController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $categoria = Categoria::find($id);
-    $title = "categoria Editar";
-    return view('categorias.edit', ['categoria' => $categoria, 'title' => $title ]);
+    $area = Area::find($id);
+    $title = "Area Editar";
+    return view('areas.edit', ['area' => $area, 'title' => $title ]);
   }
 
 
@@ -102,8 +115,9 @@ class CategoriaController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
+
     $validator = Validator::make($request->all(), [
-      'categoria' => 'required|unique:categorias,categoria,'.$id . '|max:125',
+      'areas_id' => 'required|unique:areas,id,'.$id . '|max:125',
 
     ]);
 
@@ -118,14 +132,22 @@ class CategoriaController extends Controller
       die;
     }
 
-    $activo = 0;
-    if ($request->activo=='on') { $activo = 1; }
 
-    $categoria = Categoria::find($id);
-    $categoria->categoria = $request->categoria;
-    $categoria->activo = $activo;
-    $categoria->save();
-    return redirect('/categorias');
+
+          $area = Area::find($id);
+          $manejos_id = $area->manejos_id;
+          $area->desdelinea = $request->desdelinea;
+          $area->hastalinea = $request->hastalinea;
+          $area->desdeposicion = $request->desdeposicion;
+          $area->hastaposicion = $request->hastaposicion;
+
+          $area->save();
+
+          return redirect('/manejos/' . $manejos_id . '/areas');
+
+
+
+
 
   }
 
@@ -144,7 +166,7 @@ class CategoriaController extends Controller
     ]);
 
     $validator = Validator::make($request->all(), [
-      'id' => 'required|exists:categorias,id',
+      'id' => 'required|exists:areas,id',
     ]);
 
 
@@ -158,9 +180,10 @@ class CategoriaController extends Controller
       die;
     }
 
-    $categoria = Categoria::find($id);
-    $categoria->delete();
-    return redirect('/categorias/');
+    $area = Area::find($id);
+    $manejos_id = $area->manejos_id;
+    $area->delete();
+    return redirect('/manejos/' . $manejos_id . '/areas');
 
 
   }
@@ -170,11 +193,11 @@ class CategoriaController extends Controller
 
     public function finder(Request $request){
 
-      $categorias = Categoria::where('categoria', 'like', '%'. $request->buscar . '%')->paginate(25);
+      $areas = Area::where('categoria', 'like', '%'. $request->buscar . '%')->paginate(25);
 
 
-      $title = "categorias buscando: " . $request->buscar;
-      return view('categorias.index', ['categorias' => $categorias, 'title' => $title ]);
+      $title = "areas buscando: " . $request->buscar;
+      return view('areas.index', ['areas' => $areas, 'title' => $title ]);
 
     }
 
@@ -186,14 +209,14 @@ class CategoriaController extends Controller
     //  echo $term;
     //  die;
 
-    $datos = Categoria::where('categoria', 'like', '%'. $term . '%')->get();
+    $datos = Area::where('areas', 'like', '%'. $term . '%')->get();
     $adevol = array();
     if (count($datos) > 0) {
       foreach ($datos as $dato)
       {
         $adevol[] = array(
           'id' => $dato->id,
-          'value' => $dato->categoria,
+          'value' => $dato->id,
         );
       }
     } else {
@@ -216,7 +239,7 @@ class CategoriaController extends Controller
     ]);
 
     $validator = Validator::make($request->all(), [
-      'id' => 'required|exists:categorias,id',
+      'id' => 'required|exists:areas,id',
     ]);
 
     if ($validator->fails()) {
@@ -229,9 +252,9 @@ class CategoriaController extends Controller
       die;
     }
 
-    $categoria = Categoria::find($id);
-    $title='categoria ver';
-    return view('categorias.show', ['categoria' => $categoria, 'title' => $title]);
+    $area = Area::find($id);
+    $title='area ver';
+    return view('categorias.show', ['area' => $area, 'title' => $title]);
 
   }
 
