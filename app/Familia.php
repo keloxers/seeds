@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Familia extends Model
 {
 
-  protected $table = 'Familias';
+  protected $table = 'familias';
 
 
   public function origens()
