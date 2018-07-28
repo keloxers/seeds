@@ -48,8 +48,8 @@ Route::resource('huertas', 'HuertaController');
 Route::post('/genotipos/finder', [ 'as' => 'genotipos.finder', 'uses' => 'GenotipoController@finder']);
 Route::get('/genotipos/{id}/destroy', 'GenotipoController@destroy')->name('genotipos');
 Route::get( '/genotipos/search', array('as' => 'genotipos.search', 'uses' => 'GenotipoController@search'));
-Route::get('/genotipos/{id}/create', 'genotipoController@create')->name('genotipos');
-Route::resource('genotipos', 'genotipoController');
+Route::get('/genotipos/{id}/create', 'GenotipoController@create')->name('genotipos');
+Route::resource('genotipos', 'GenotipoController');
 
 Route::post('/especies/finder', [ 'as' => 'especies.finder', 'uses' => 'EspecieController@finder']);
 Route::get('/especies/{id}/destroy', 'EspecieController@destroy')->name('especies');
