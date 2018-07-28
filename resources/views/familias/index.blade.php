@@ -11,39 +11,39 @@
 
   <div class="row">
     <div class="col-6">
-      {{ Form::open(array('route' => 'maestros.finder', 'class' => 'form-inline', 'role' => 'form')) }}
+      {{ Form::open(array('route' => 'familias.finder', 'class' => 'form-inline', 'role' => 'form')) }}
       <div class="form-group mb-2">
         <input type="text" class="form-control" name="buscar" id="buscar" value="">
-        {{ Form::hidden('maestro_id', '', array('id' => 'maestro_id', 'name' => 'maestro_id')) }}
+        {{ Form::hidden('familia_id', '', array('id' => 'familia_id', 'name' => 'familia_id')) }}
       </div>
       <button type="submit" class="btn btn-primary mb-2">Buscar</button>
       </form>
     </div>
     <div class="col-6 text-right">
-      <a href="/maestros/{{$especie->id}}/create">
+      <a href="/familias/{{$especie->id}}/create">
         <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo</button>
       </a>
     </div>
   </div>
 
-  @if($maestros)
+  @if($familias)
 
   <table class="table">
     <thead class="thead-light">
       <tr>
-        <th scope="col">Maestro</th>
+        <th scope="col">Familia</th>
+        <th scope="col">Origen</th>
         <th scope="col">Activo</th>
         <th scope="col">Opciones</th>
       </tr>
     </thead>
     <tbody>
-      @foreach ($maestros as $maestro)
+      @foreach ($familias as $familia)
       <tr>
+        <td>{{ $familia->familia}}</td>
+        <td>{{ $familia->origens->origen}}</td>
         <td>
-          {{ $maestro->maestro}}
-        </td>
-        <td>
-          @if ($maestro->activo)
+          @if ($familia->activo)
             <span class="badge badge-success">Si</span>
           @else
             <span class="badge badge-danger">No</span>
@@ -51,8 +51,8 @@
         </td>
         <td>
           <h5>
-          <a href="/maestros/{{ $maestro->id }}/edit"><i class="fas fa-edit"></i></a>
-          <a href="/maestros/{{ $maestro->id }}"><i class="fas fa-eye"></i></a>
+          <a href="/familias/{{ $familia->id }}/edit" data-toggle="tooltip" title="Editar"><i class="fas fa-edit"></i></a>
+          <a href="/familias/{{ $familia->id }}" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
         </h5>
 
         </td>
@@ -61,7 +61,7 @@
     </tbody>
   </table>
 
-  {{ $maestros->links() }}
+  {{ $familias->links() }}
 
   @endif
 

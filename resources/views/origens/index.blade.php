@@ -11,41 +11,45 @@
 
   <div class="row">
     <div class="col-6">
-      {{ Form::open(array('route' => 'especies.finder', 'class' => 'form-inline', 'role' => 'form')) }}
+      {{ Form::open(array('route' => 'origens.finder', 'class' => 'form-inline', 'role' => 'form')) }}
       <div class="form-group mb-2">
         <input type="text" class="form-control" name="buscar" id="buscar" value="">
-        {{ Form::hidden('especie_id', '', array('id' => 'especie_id', 'name' => 'especie_id')) }}
+        {{ Form::hidden('origen_id', '', array('id' => 'origen_id', 'name' => 'origen_id')) }}
       </div>
       <button type="submit" class="btn btn-primary mb-2">Buscar</button>
       </form>
     </div>
     <div class="col-6 text-right">
-      <a href="/especies/create">
+      <a href="/origens/create">
         <button type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo</button>
       </a>
     </div>
   </div>
 
-  @if($especies)
+  @if($origens)
 
   <table class="table">
     <thead class="thead-light">
       <tr>
-        <th scope="col">Especie</th>
+        <th scope="col">Origen</th>
+        <th scope="col">Comentarios</th>
         <th scope="col">Estado</th>
         <th scope="col">Opciones</th>
       </tr>
     </thead>
     <tbody>
-      @foreach ($especies as $especie)
+      @foreach ($origens as $origen)
       <tr>
         <td>
-          <a href="/especies/{{ $especie->id }}/familias">
-          {{ $especie->especie}}
+          <a href="/origens/{{ $origen->id }}/maestros">
+          {{ $origen->origen}}
           </a>
         </td>
         <td>
-          @if ($especie->activo)
+          {{ $origen->comentarios}}
+        </td>
+        <td>
+          @if ($origen->activo)
             <span class="badge badge-success">Activo</span>
           @else
             <span class="badge badge-danger">Inactivo</span>
@@ -53,8 +57,8 @@
         </td>
         <td>
           <h5>
-          <a href="/especies/{{ $especie->id }}/edit" data-toggle="tooltip" title="Editar"><i class="fas fa-edit"></i></a>
-          <a href="/especies/{{ $especie->id }}/familias" data-toggle="tooltip" title="Familias"><i class="fas fa-code-branch"></i></a>
+          <a href="/origens/{{ $origen->id }}/edit" data-toggle="tooltip" title="Editar"><i class="fas fa-edit"></i></a>
+          <a href="/origens/{{ $origen->id }}" data-toggle="tooltip" title="Ver"><i class="fas fa-eye"></i></a>
         </h5>
 
         </td>
@@ -63,7 +67,7 @@
     </tbody>
   </table>
 
-  {{ $especies->links() }}
+  {{ $origens->links() }}
 
   @endif
 

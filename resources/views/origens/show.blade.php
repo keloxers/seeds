@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-8">
@@ -16,17 +15,17 @@
 
               <div class="col-12">
 
-                {{ Form::open(array('url' => '/maestros/' . $maestro->id, 'class' => 'form-group', 'role' => 'form')) }}
+                {{ Form::open(array('url' => '/origens/' . $origen->id, 'class' => 'form-group', 'role' => 'form')) }}
                 {{ Form::hidden('_method', 'DELETE') }}
 
                 <div class="form-group">
-                  <label for="">Maestro</label>
-                  {{ $maestro->maestro}}
+                  <label for="">Origen</label>
+                  {{ $origen->origen}}
                 </div>
                 <div class="form-group">
-                  <label for="activo">Estado</label>
+                  <label for="activo">Activo</label>
 
-                  @if ($maestro->activo)
+                  @if ($origen->activo)
                     <span class="badge badge-success">Activo</span>
                   @else
                     <span class="badge badge-danger">Inactivo</span>

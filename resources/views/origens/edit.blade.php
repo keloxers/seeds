@@ -16,21 +16,25 @@
 
               <div class="col-12">
 
-                {{ Form::open(array('url' => URL::to('maestros/' . $maestro->id), 'method' => 'PUT', 'role' => 'form')) }}
-                {{ Form::hidden('maestros_id', $maestro->id, array('id' => 'maestros_id', 'name' => 'maestros_id')) }}
+                {{ Form::open(array('url' => URL::to('origens/' . $origen->id), 'method' => 'PUT', 'role' => 'form')) }}
+                <div class="form-group">
+                  <label for="">Origen</label>
+                  {{ Form::text('origen', $origen->origen, array('id' => 'origen', 'name' => 'origen', 'class' => "form-control" , 'placeholder' => 'Ingrese un origen')) }}
+                </div>
 
                 <div class="form-group">
-                  <label for="">maestro</label>
-                  {{ Form::text('maestro', $maestro->maestro, array('id' => 'maestro', 'name' => 'maestro', 'class' => "form-control" , 'placeholder' => 'Ingrese un maestro')) }}
+                  <label for="exampleFormControlTextarea1">Comentarios</label>
+                  <textarea class="form-control" id="comentarios" name="comentarios" rows="5">{{$origen->comentarios}}</textarea>
                 </div>
+
+
                 <div class="form-group">
                   <label for="activo">Activo</label>
                   <input type="checkbox" data-toggle="toggle" name="activo" id="activo"
-                  @if ($maestro->activo)
+                  @if ($origen->activo)
                     checked
                   @endif
                   >
-
                 </div>
                 <button type="submit" class="btn btn-primary">Actualizar</button>
                 {{ Form::close() }}

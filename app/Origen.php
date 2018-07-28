@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Maestro extends Model
+class Origen extends Model
 {
 
-  protected $table = 'maestros';
+  protected $table = 'origens';
 
 
 

@@ -9,9 +9,9 @@ class Genotipo extends Model
 
   protected $table = 'genotipos';
 
-  public function maestros()
+  public function familias()
   {
-      return $this->belongsTo('App\Maestro');
+      return $this->belongsTo('App\Familia');
   }
 
 

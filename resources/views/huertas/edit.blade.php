@@ -56,8 +56,8 @@ $( function() {
                 </div>
 
                 <div class="form-group">
-                  <label for="">Posiciones</label>
-                  {{ Form::text('posiciones', $huerta->posiciones, array('id' => 'posiciones', 'name' => 'posiciones', 'class' => "form-control" , 'placeholder' => 'Ingrese posiciones')) }}
+                  <label for="">Arboles</label>
+                  {{ Form::text('arboles', $huerta->arboles, array('id' => 'arboles', 'name' => 'arboles', 'class' => "form-control" , 'placeholder' => 'Ingrese arboles')) }}
                 </div>
 
                 <?php

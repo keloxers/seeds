@@ -6,15 +6,13 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Http\Request;
 use Validator;
 use Bouncer;
-use App\Categoria;
-use App\Especie;
-use App\Maestro;
+use App\Origen;
 
 
-class MaestroController extends Controller
+class origenController extends Controller
 {
 
-  public function index($id)
+  public function index()
   {
 
     if (Bouncer::cannot('Configuracion')) {
@@ -22,26 +20,26 @@ class MaestroController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $especie = Especie::find($id);
-    $maestros = Maestro::where('especies_id',$id)->paginate(25);
-    $title = "especie: " . $especie->especie;
-    return view('maestros.index', ['especie' => $especie, 'maestros' => $maestros, 'title' => $title ]);
+
+    $origens = Origen::paginate(25);
+
+
+    $title = "Origenes ";
+    return view('origens.index', ['origens' => $origens, 'title' => $title ]);
 
   }
 
 
 
-    public function create($id)
+    public function create()
     {
       if (Bouncer::cannot('Configuracion')) {
         $errors[] = 'No tiene autorizacion para ingresar a este modulo.';
         return redirect()->back()->with('errors', $errors)->withInput();
       }
 
-      $especie = Especie::find($id);
-
-      $title = "Crear maestros para especie:";
-      return view('maestros.create', ['especie' => $especie, 'title' => $title]);
+      $title = "Crear origen:";
+      return view('origens.create', ['title' => $title]);
     }
 
 
@@ -54,7 +52,8 @@ class MaestroController extends Controller
       }
 
       $validator = Validator::make($request->all(), [
-        'especies_id' => 'required|exists:especies,id',
+        'origen' => 'required|unique:origens|max:255',
+
       ]);
 
 
@@ -68,18 +67,17 @@ class MaestroController extends Controller
         die;
       }
 
+
+      $origen = new Origen;
+
       $activo = 0;
       if ($request->activo=='on') { $activo = 1; }
 
-      $maestro = new Maestro;
-      $maestro->especies_id = $request->especies_id;
-      $maestro->maestro = $request->maestro;
-      $maestro->activo = $activo;
-      $maestro->save();
-      return redirect('maestros/' . $request->especies_id . '/create');
-
-
-
+      $origen->origen = $request->origen;
+      $origen->comentarios = $request->comentarios;
+      $origen->activo = $activo;
+      $origen->save();
+      return redirect('/origens/create');
 
     }
 
@@ -95,25 +93,24 @@ class MaestroController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $maestro = Maestro::find($id);
-    $title = "Maestro Editar";
-    return view('maestros.edit', ['maestro' => $maestro, 'title' => $title ]);
+    $origen = Origen::find($id);
+    $title = "Origen Editar";
+    return view('origens.edit', ['origen' => $origen, 'title' => $title ]);
   }
 
 
 
   public function update(Request $request, $id)
   {
-
     if (Bouncer::cannot('Configuracion')) {
       $errors[] = 'No tiene autorizacion para ingresar a este modulo.';
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
 
-
     $validator = Validator::make($request->all(), [
-      'maestros_id' => 'required|unique:maestros,id,'.$id . '|max:125',
+      'origen' => 'required|unique:origens,origen,'.$id . '|max:125',
+
     ]);
 
 
@@ -127,15 +124,23 @@ class MaestroController extends Controller
       die;
     }
 
+
+
+    $origen = Origen::find($id);
+
     $activo = 0;
     if ($request->activo=='on') { $activo = 1; }
 
-    $maestro = Maestro::find($id);
-    $especies_id = $maestro->especies_id;
-    $maestro->maestro = $request->maestro;
-    $maestro->activo = $activo;
-    $maestro->save();
-    return redirect('/especies/' . $especies_id . '/maestros');
+    $origen->origen = $request->origen;
+    $origen->comentarios = $request->comentarios;
+    $origen->activo = $activo;
+    $origen->save();
+
+    return redirect('/origens');
+
+
+
+
 
   }
 
@@ -154,7 +159,7 @@ class MaestroController extends Controller
     ]);
 
     $validator = Validator::make($request->all(), [
-      'id' => 'required|exists:maestros,id',
+      'id' => 'required|exists:origens,id',
     ]);
 
 
@@ -168,10 +173,9 @@ class MaestroController extends Controller
       die;
     }
 
-    $maestro = Maestro::find($id);
-    $especies_id = $maestro->$especies_id;
-    $maestro->delete();
-    return redirect('especies/' . $especies_id . '/maestros');
+    $origen = Origen::find($id);
+    $origen->delete();
+    return redirect('/origens');
 
 
   }
@@ -180,9 +184,12 @@ class MaestroController extends Controller
 
 
     public function finder(Request $request){
-      $maestros = Maestro::where('maestro', 'like', '%'. $request->buscar . '%')->paginate(35);
-      $title = "Maestro buscando: " . $request->buscar;
-      return view('maestros.index', ['maestros' => $maestros, 'title' => $title ]);
+
+      $origens = Origen::where('categoria', 'like', '%'. $request->buscar . '%')->paginate(25);
+
+
+      $title = "Origens buscando: " . $request->buscar;
+      return view('origens.index', ['origens' => $origens, 'title' => $title ]);
 
     }
 
@@ -194,14 +201,14 @@ class MaestroController extends Controller
     //  echo $term;
     //  die;
 
-    $datos = Maestro::where('maestro', 'like', '%'. $term . '%')->get();
+    $datos = Origen::where('origen', 'like', '%'. $term . '%')->get();
     $adevol = array();
     if (count($datos) > 0) {
       foreach ($datos as $dato)
       {
         $adevol[] = array(
           'id' => $dato->id,
-          'value' => $dato->maestro,
+          'value' => $dato->origen,
         );
       }
     } else {
@@ -224,7 +231,7 @@ class MaestroController extends Controller
     ]);
 
     $validator = Validator::make($request->all(), [
-      'id' => 'required|exists:maestros,id',
+      'id' => 'required|exists:origens,id',
     ]);
 
     if ($validator->fails()) {
@@ -237,9 +244,9 @@ class MaestroController extends Controller
       die;
     }
 
-    $maestro = Maestro::find($id);
-    $title='maestro ver';
-    return view('maestros.show', ['maestro' => $maestro, 'title' => $title]);
+    $origen = Origen::find($id);
+    $title='Origen ver';
+    return view('origens.show', ['origen' => $origen, 'title' => $title]);
 
   }
 

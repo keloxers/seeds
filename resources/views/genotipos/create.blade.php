@@ -13,26 +13,16 @@
 <script>
 $( function() {
   $.noConflict();
-  $( "#maestro" ).autocomplete({
-    source: "/maestros/search",
+  $( "#familia" ).autocomplete({
+    source: "/familias/search",
     minLength: 1,
     select: function( event, ui ) {
 
-      $('#maestros_id').val( ui.item.id );
+      $('#familias_id').val( ui.item.id );
     }
   });
 
-  // $( "#datepicker" ).datepicker("option", "dateFormat", "dd/mm/yy");
 
-  var date_input=$('input[name="date"]'); //our date input has the name "date"
-        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-        var options={
-          format: 'dd/mm/yyyy',
-          container: container,
-          todayHighlight: true,
-          autoclose: true,
-        };
-        date_input.datepicker(options);
 } );
 </script>
 
@@ -62,9 +52,9 @@ $( function() {
                 {{ Form::open(array('route' => 'genotipos.store',  'autocomplete' => 'off')) }}
                 {{ Form::hidden('huertas_id', $huerta->id, array('id' => 'huertas_id', 'name' => 'huertas_id')) }}
                 <div class="form-group">
-                  <label for="">Maestro</label>
-                  <input type="text" class="form-control" name="maestro" id="maestro" placeholder="Ingrese maestro">
-                  {{ Form::hidden('maestros_id', '', array('id' => 'maestros_id', 'name' => 'maestros_id')) }}
+                  <label for="">Familia</label>
+                  <input type="text" class="form-control" name="familia" id="familia" placeholder="Ingrese familia">
+                  {{ Form::hidden('familias_id', '', array('id' => 'familias_id', 'name' => 'familias_id')) }}
                 </div>
 
                 <div class="form-group">
@@ -85,10 +75,9 @@ $( function() {
                 </div>
 
                 <div class="form-group">
-                  <label for="">Fecha plantación</label><br>
-                  <input type="text" id="date" name="date" class="form-control">
+                  <label for="exampleFormControlTextarea1">Comentarios</label>
+                  <textarea class="form-control" id="comentarios" name="comentarios" rows="5"></textarea>
                 </div>
-
 
                 <div class="form-group">
                   <label for="activo">Activo</label>

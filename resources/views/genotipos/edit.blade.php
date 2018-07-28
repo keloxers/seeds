@@ -1,17 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<?php
-      use Carbon\Carbon;
-?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<!-- Bootstrap Date-Picker Plugin -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
 <script>
 $( function() {
@@ -25,17 +19,7 @@ $( function() {
     }
   });
 
-  // $( "#datepicker" ).datepicker("option", "dateFormat", "dd/mm/yy");
 
-  var date_input=$('input[name="date"]'); //our date input has the name "date"
-        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-        var options={
-          format: 'dd/mm/yyyy',
-          container: container,
-          todayHighlight: true,
-          autoclose: true,
-        };
-        date_input.datepicker(options);
 } );
 </script>
 
@@ -79,14 +63,9 @@ $( function() {
                   {{ Form::text('posicion', $genotipo->posicion, array('id' => 'posicion', 'name' => 'posicion', 'class' => "form-control" , 'placeholder' => 'Ingrese posicion')) }}
                 </div>
 
-                <?php
-                    $fecha = new Carbon($genotipo->fechaplantacion);
-                 ?>
-
-
                 <div class="form-group">
-                  <label for="">Fecha plantación</label><br>
-                  <input type="text" value='{{$fecha->format('d/m/Y')}}' id="date" name="date" class="form-control">
+                  <label for="exampleFormControlTextarea1">Comentarios</label>
+                  <textarea class="form-control" id="comentarios" name="comentarios" rows="5">{{$origen->comentarios}}</textarea>
                 </div>
 
 

@@ -54,15 +54,15 @@ Route::resource('genotipos', 'genotipoController');
 Route::post('/especies/finder', [ 'as' => 'especies.finder', 'uses' => 'EspecieController@finder']);
 Route::get('/especies/{id}/destroy', 'EspecieController@destroy')->name('especies');
 Route::get( '/especies/search', array('as' => 'especies.search', 'uses' => 'EspecieController@search'));
-Route::get('/especies/{id}/maestros', 'MaestroController@index')->name('maestros');
+Route::get('/especies/{id}/familias', 'FamiliaController@index')->name('familias');
 Route::resource('especies', 'EspecieController');
 
-Route::post('/maestros/finder', [ 'as' => 'maestros.finder', 'uses' => 'MaestroController@finder']);
-Route::get('/maestros/{id}/destroy', 'MaestroController@destroy')->name('maestros');
-Route::get( '/maestros/search', array('as' => 'maestros.search', 'uses' => 'MaestroController@search'));
-Route::get( '/maestros/{id}/create', array('as' => 'maestros.create', 'uses' => 'MaestroController@create'));
+Route::post('/familias/finder', [ 'as' => 'familias.finder', 'uses' => 'FamiliaController@finder']);
+Route::get('/familias/{id}/destroy', 'FamiliaController@destroy')->name('familias');
+Route::get( '/familias/search', array('as' => 'familias.search', 'uses' => 'FamiliaController@search'));
+Route::get( '/familias/{id}/create', array('as' => 'familias.create', 'uses' => 'FamiliaController@create'));
 
-Route::resource('maestros', 'MaestroController');
+Route::resource('familias', 'FamiliaController');
 
 Route::post('/aplicacions/finder', [ 'as' => 'aplicacions.finder', 'uses' => 'AplicacionController@finder']);
 Route::get('/aplicacions/{id}/destroy', 'AplicacionController@destroy')->name('aplicacions');
@@ -79,3 +79,10 @@ Route::get('/areas/{id}/destroy', 'AreaController@destroy')->name('areas');
 Route::get( '/areas/search', array('as' => 'areas.search', 'uses' => 'AreaController@search'));
 Route::get( '/areas/{id}/create', array('as' => 'areas.create', 'uses' => 'AreaController@create'));
 Route::resource('areas', 'AreaController');
+
+Route::post('/origens/finder', [ 'as' => 'origens.finder', 'uses' => 'OrigenController@finder']);
+Route::get('/origens/{id}/destroy', 'OrigenController@destroy')->name('origens');
+Route::get( '/origens/search', array('as' => 'origens.search', 'uses' => 'OrigenController@search'));
+Route::get( '/origens/create', array('as' => 'origens.create', 'uses' => 'OrigenController@create'));
+
+Route::resource('origens', 'OrigenController');

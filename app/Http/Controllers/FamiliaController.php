@@ -7,13 +7,11 @@ use Illuminate\Http\Request;
 use Validator;
 use Bouncer;
 use App\Categoria;
-use App\Huerta;
-use App\Genotipo;
-
-use Carbon\Carbon;
+use App\Especie;
+use App\Familia;
 
 
-class GenotipoController extends Controller
+class FamiliaController extends Controller
 {
 
   public function index($id)
@@ -24,10 +22,10 @@ class GenotipoController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $huerta = Huerta::find($id);
-    $genotipos = Genotipo::where('huertas_id',$id)->paginate(25);
-    $title = "Huerta: " . $huerta->huerta;
-    return view('genotipos.index', ['huerta' => $huerta, 'genotipos' => $genotipos, 'title' => $title ]);
+    $especie = Especie::find($id);
+    $familias = Familia::where('especies_id',$id)->paginate(25);
+    $title = "Especie: " . $especie->especie;
+    return view('familias.index', ['especie' => $especie, 'familias' => $familias, 'title' => $title ]);
 
   }
 
@@ -40,10 +38,10 @@ class GenotipoController extends Controller
         return redirect()->back()->with('errors', $errors)->withInput();
       }
 
-      $huerta = Huerta::find($id);
+      $especie = Especie::find($id);
 
-      $title = "Crear genotipo en huerta:";
-      return view('genotipos.create', ['huerta' => $huerta, 'title' => $title]);
+      $title = "Crear familias para especie:";
+      return view('familias.create', ['especie' => $especie, 'title' => $title]);
     }
 
 
@@ -56,8 +54,9 @@ class GenotipoController extends Controller
       }
 
       $validator = Validator::make($request->all(), [
-        'huertas_id' => 'required|exists:huertas,id',
-        'familias_id' => 'required|exists:familias,id',
+        'especies_id' => 'required|exists:especies,id',
+        'origens_id' => 'required|exists:origens,id',
+
       ]);
 
 
@@ -74,19 +73,13 @@ class GenotipoController extends Controller
       $activo = 0;
       if ($request->activo=='on') { $activo = 1; }
 
-
-
-      $genotipo = new Genotipo;
-      $genotipo->huertas_id = $request->huertas_id;
-      $genotipo->familias_id = $request->familias_id;
-      $genotipo->genotipo = $request->genotipo;
-      $genotipo->linea = $request->linea;
-      $genotipo->posicion = $request->posicion;
-      $genotipo->comentarios = $request->comentarios;
-      $genotipo->activo = $activo;
-
-      $genotipo->save();
-      return redirect('genotipos/' . $request->huertas_id . '/create');
+      $familia = new Familia;
+      $familia->especies_id = $request->especies_id;
+      $familia->familia = $request->familia;
+      $familia->origens_id = $request->origens_id;
+      $familia->activo = $activo;
+      $familia->save();
+      return redirect('familias/' . $request->especies_id . '/create');
 
 
 
@@ -105,24 +98,27 @@ class GenotipoController extends Controller
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $genotipo = Genotipo::find($id);
-    $title = "genotipo Editar";
-    return view('genotipos.edit', ['genotipo' => $genotipo, 'title' => $title ]);
+    $familia = Familia::find($id);
+    $title = "Familia Editar";
+    return view('familias.edit', ['familia' => $familia, 'title' => $title ]);
   }
 
 
 
   public function update(Request $request, $id)
   {
+
     if (Bouncer::cannot('Configuracion')) {
       $errors[] = 'No tiene autorizacion para ingresar a este modulo.';
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
+
+
     $validator = Validator::make($request->all(), [
-      'genotipo' => 'required|unique:genotipos,id,'.$id . '|max:125',
-      'huertas_id' => 'required|exists:huertas,id',
-      'familias_id' => 'required|exists:familias,id',
+      'familias_id' => 'required|unique:familias,id,'.$id . '|max:125',
+      'origens_id' => 'required|exists:origens,id',
+
     ]);
 
 
@@ -136,26 +132,16 @@ class GenotipoController extends Controller
       die;
     }
 
+    $activo = 0;
+    if ($request->activo=='on') { $activo = 1; }
 
-          $activo = 0;
-          if ($request->activo=='on') { $activo = 1; }
-
-          $genotipo = Genotipo::find($id);
-          $huertas_id = $genotipo->huertas_id;
-          $genotipo->familias_id = $request->familias_id;
-          $genotipo->genotipo = $request->genotipo;
-          $genotipo->linea = $request->linea;
-          $genotipo->posicion = $request->posicion;
-          $genotipo->comentarios = $request->comentarios;
-          $genotipo->activo = $activo;
-
-          $genotipo->save();
-
-          return redirect('/huertas/' . $huertas_id . '/genotipos');
-
-
-
-    return redirect('/categorias');
+    $familia = Familia::find($id);
+    $especies_id = $familia->especies_id;
+    $familia->familia = $request->familia;
+    $familia->origens_id = $request->origens_id;
+    $familia->activo = $activo;
+    $familia->save();
+    return redirect('/especies/' . $especies_id . '/familias');
 
   }
 
@@ -174,7 +160,7 @@ class GenotipoController extends Controller
     ]);
 
     $validator = Validator::make($request->all(), [
-      'id' => 'required|exists:categorias,id',
+      'id' => 'required|exists:familias,id',
     ]);
 
 
@@ -188,9 +174,10 @@ class GenotipoController extends Controller
       die;
     }
 
-    $categoria = Genotipo::find($id);
-    $categoria->delete();
-    return redirect('/categorias/');
+    $familia = Familia::find($id);
+    $especies_id = $familia->especies_id;
+    $familia->delete();
+    return redirect('especies/' . $especies_id . '/familias');
 
 
   }
@@ -199,12 +186,9 @@ class GenotipoController extends Controller
 
 
     public function finder(Request $request){
-
-      $categorias = Genotipo::where('categoria', 'like', '%'. $request->buscar . '%')->paginate(25);
-
-
-      $title = "categorias buscando: " . $request->buscar;
-      return view('categorias.index', ['categorias' => $categorias, 'title' => $title ]);
+      $familias = Familia::where('familia', 'like', '%'. $request->buscar . '%')->paginate(35);
+      $title = "familia buscando: " . $request->buscar;
+      return view('familias.index', ['familias' => $familias, 'title' => $title ]);
 
     }
 
@@ -216,14 +200,14 @@ class GenotipoController extends Controller
     //  echo $term;
     //  die;
 
-    $datos = Genotipo::where('categoria', 'like', '%'. $term . '%')->get();
+    $datos = Familia::where('familia', 'like', '%'. $term . '%')->get();
     $adevol = array();
     if (count($datos) > 0) {
       foreach ($datos as $dato)
       {
         $adevol[] = array(
           'id' => $dato->id,
-          'value' => $dato->categoria,
+          'value' => $dato->familia,
         );
       }
     } else {
@@ -246,7 +230,7 @@ class GenotipoController extends Controller
     ]);
 
     $validator = Validator::make($request->all(), [
-      'id' => 'required|exists:categorias,id',
+      'id' => 'required|exists:familias,id',
     ]);
 
     if ($validator->fails()) {
@@ -259,9 +243,9 @@ class GenotipoController extends Controller
       die;
     }
 
-    $categoria = Genotipo::find($id);
-    $title='Genotipo ver';
-    return view('categorias.show', ['categoria' => $categoria, 'title' => $title]);
+    $familia = Familia::find($id);
+    $title='Familia ver';
+    return view('familias.show', ['familia' => $familia, 'title' => $title]);
 
   }
 

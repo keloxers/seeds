@@ -35,8 +35,7 @@
       <tr>
         <th scope="col">Huerta</th>
         <th scope="col">Lineas</th>
-        <th scope="col">Posiciones</th>
-        <th scope="col">Fecha Creacion</th>
+        <th scope="col">Arboles</th>
         <th scope="col">Estado</th>
         <th scope="col">Opciones</th>
       </tr>
@@ -50,8 +49,7 @@
           </a>
         </td>
         <td>{{ $huerta->lineas}}</td>
-        <td>{{ $huerta->posiciones}}</td>
-        <td>{{ $huerta->fechacreacion}}</td>
+        <td>{{ $huerta->arboles}}</td>
         <td>
           @if ($huerta->activo)
             <span class="badge badge-success">Activo</span>

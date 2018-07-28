@@ -50,6 +50,8 @@ class HuertaController extends Controller
 
       $validator = Validator::make($request->all(), [
         'huerta' => 'required|max:125',
+        'lineas' => 'required|integer',
+        'arboles' => 'required|integer',
       ]);
 
 
@@ -79,7 +81,7 @@ class HuertaController extends Controller
       $huerta = new Huerta;
       $huerta->huerta = $request->huerta;
       $huerta->lineas = $request->lineas;
-      $huerta->posiciones =  $request->posiciones;
+      $huerta->arboles =  $request->arboles;
       $huerta->fechacreacion =  $date;
       $huerta->activo = $activo;
       $huerta->save();
@@ -115,7 +117,8 @@ class HuertaController extends Controller
 
     $validator = Validator::make($request->all(), [
       'huerta' => 'required|max:125',
-
+      'lineas' => 'required|integer',
+      'arboles' => 'required|integer',
     ]);
 
 
@@ -143,7 +146,7 @@ class HuertaController extends Controller
     $huerta = Huerta::find($id);
     $huerta->huerta = $request->huerta;
     $huerta->lineas = $request->lineas;
-    $huerta->posiciones =  $request->posiciones;
+    $huerta->arboles =  $request->arboles;
     $huerta->fechacreacion =  $date;
     $huerta->activo = $activo;
     $huerta->save();

@@ -69,8 +69,8 @@ $( function() {
                 </div>
 
                 <div class="form-group">
-                  <label for="">Posiciones</label>
-                  <input type="text" class="form-control" name="posiciones" id="posiciones" placeholder="Ingrese posiciones">
+                  <label for="">Arboles</label>
+                  <input type="text" class="form-control" name="arboles" id="arboles" placeholder="Ingrese cantidad arboles">
                 </div>
 
                 <div class="form-group">
