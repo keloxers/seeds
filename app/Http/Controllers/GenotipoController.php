@@ -75,6 +75,16 @@ class GenotipoController extends Controller
       if ($request->activo=='on') { $activo = 1; }
 
 
+      $genotipo = Genotipo::where('huertas_id', $request->huertas_id)
+                            ->where('linea', $request->linea)
+                            ->where('posicion', $request->posicion)
+                            ->first();
+      if($genotipo) {
+        $errors[] = 'Ya existe un genotipo cargada para esa linea y posición.';
+        return redirect()->back()->with('errors', $errors)->withInput();
+        die;
+      }
+
 
       $genotipo = new Genotipo;
       $genotipo->huertas_id = $request->huertas_id;
