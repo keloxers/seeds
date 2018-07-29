@@ -10,23 +10,66 @@ use App\Categoria;
 use App\Huerta;
 use App\Genotipo;
 
+use App\Especie;
+use App\Familia;
+
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 
 class GenotipoController extends Controller
 {
 
-  public function index($id)
+  public function index($huertas_id, $especies_id=0, $familias_id=0)
   {
+
 
     if (Bouncer::cannot('Configuracion')) {
       $errors[] = 'No tiene autorizacion para ingresar a este modulo.';
       return redirect()->back()->with('errors', $errors)->withInput();
     }
 
-    $huerta = Huerta::find($id);
-    $genotipos = Genotipo::where('huertas_id',$id)->paginate(25);
+    $huerta = Huerta::find($huertas_id);
+    $familia = Familia::find($familias_id);
+
     $title = "Huerta: " . $huerta->huerta;
+
+    if ($especies_id==0) {
+      if ($familias_id==0) {
+          $genotipos = Genotipo::where('huertas_id',$huertas_id)
+                                 ->paginate(25);
+          $title .= ' - Especie: Todas';
+      } else {
+        $genotipos = Genotipo::where('huertas_id',$huertas_id)
+                             ->where('familias_id',$familias_id)
+                             ->paginate(25);
+        $title .= ' - Familias: ' . $familia->familia;
+      }
+
+
+
+
+    } else {
+
+      $especie = Especie::find($especies_id);
+
+      $title .= ' - Especie: '. $especie->especie;
+      // join depth - join en profundidad
+
+       $genotipos = Genotipo::join('familias', function ($join) {
+                               $join->on('genotipos.familias_id', '=', 'familias.id');
+                               })
+                               ->join('especies', function ($join) {
+                                 $join->on('familias.especies_id', '=', 'especies.id');
+                           })
+                           ->where('huertas_id','=',$huertas_id)
+                           ->where('especies_id','=',$especies_id)
+                           ->paginate(25);
+
+
+    }
+
+
     return view('genotipos.index', ['huerta' => $huerta, 'genotipos' => $genotipos, 'title' => $title ]);
 
   }

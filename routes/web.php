@@ -41,7 +41,7 @@ Route::post('/permissions', [ 'as' => 'permissions.store', 'uses' => 'Permission
 Route::post('/huertas/finder', [ 'as' => 'huertas.finder', 'uses' => 'HuertaController@finder']);
 Route::get('/huertas/{id}/destroy', 'HuertaController@destroy')->name('huertas');
 Route::get( '/huertas/search', array('as' => 'huertas.search', 'uses' => 'HuertaController@search'));
-Route::get('/huertas/{id}/genotipos', 'GenotipoController@index')->name('genotipos');
+Route::get('/huertas/{huertas_id}/especies/{especies_id}/familias/{familias_id}', 'GenotipoController@index')->name('genotipos');
 Route::get('/huertas/{id}/manejos', 'ManejoController@index')->name('manejos');
 Route::resource('huertas', 'HuertaController');
 

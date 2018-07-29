@@ -15,6 +15,15 @@ class Familia extends Model
       return $this->belongsTo('App\Origen');
   }
 
+  public function especies()
+  {
+      return $this->belongsTo('App\Especie');
+  }
+
+  public function genotipos()
+  {
+      return $this->hasMany('App\genotipos');
+  }
 
 
 }

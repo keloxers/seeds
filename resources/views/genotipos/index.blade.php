@@ -32,10 +32,10 @@
     <thead class="thead-light">
       <tr>
         <th scope="col">Genotipo</th>
-        <th scope="col">Familia</th>
         <th scope="col">Linea</th>
         <th scope="col">Posicion</th>
-        <th scope="col">Comentarios</th>
+        <th scope="col">Familia</th>
+        <th scope="col">Especie</th>
         <th scope="col">Activo</th>
         <th scope="col">Opciones</th>
       </tr>
@@ -44,10 +44,18 @@
       @foreach ($genotipos as $genotipo)
       <tr>
         <td>{{ $genotipo->genotipo}}</td>
-        <td>{{ $genotipo->familias->familia}}</td>
         <td>{{ $genotipo->linea}}</td>
         <td>{{ $genotipo->posicion}}</td>
-        <td>{{ $genotipo->comentarios}}</td>
+        <td>
+          <a href="/huertas/{{$huerta->id}}/especies/0/familias/{{$genotipo->familias->id}}">
+          {{ $genotipo->familias->familia}}
+          </a>
+        </td>
+        <td>
+          <a href="/huertas/{{$huerta->id}}/especies/{{$genotipo->familias->especies->id}}/familias/0">
+          {{ $genotipo->familias->especies->especie}}
+          </a>
+        </td>
         <td>
           @if ($genotipo->activo)
             <span class="badge badge-success">Si</span>

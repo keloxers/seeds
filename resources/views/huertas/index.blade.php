@@ -44,7 +44,7 @@
       @foreach ($huertas as $huerta)
       <tr>
         <td>
-          <a href="/huertas/{{ $huerta->id }}/genotipos">
+          <a href="huertas/{{$huerta->id}}/especies/0/familias/0">
           {{ $huerta->huerta}}
           </a>
         </td>
@@ -60,7 +60,7 @@
         <td>
           <h5>
           <a href="/huertas/{{ $huerta->id }}/edit"><i class="fas fa-edit"></i></a>
-          <a href="/huertas/{{ $huerta->id }}/genotipos"><i class="fas fa-eye"></i></a>
+          <a href="huertas/{{$huerta->id}}/especies/0/familias/0"><i class="fas fa-eye"></i></a>
           <a href="/huertas/{{ $huerta->id }}/manejos"><i class="fas fa-hand-rock"></i></a>
         </h5>
 
